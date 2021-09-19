@@ -14,26 +14,21 @@ public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private String username;
+	private String userName;
 	private String email;
 	private String password;
-	
-	/*@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinTable(
-		name="users_notes",
-		joinColumns=@JoinColumn(name = "user_id", referencedColumnName = "id"),
-		inverseJoinColumns = @JoinColumn(name = "note_id", referencedColumnName = "id")
-	)
-	private Collection<Note> notes;*/
+	private boolean active;
+	private String roles;//Comma separated
 
 	public User() {
 	}
 
-	public User(String username, String email, String password/* , Collection<Note> notes */) {
-		this.username = username;
+	public User(String userName, String email, String password) {
+		this.userName = userName;
 		this.email = email;
 		this.password = password;
-//		this.notes = notes;
+		this.active = true;
+		this.roles = "USER";
 	}
 
 	public Long getId() {
@@ -44,12 +39,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getEmail() {
@@ -68,10 +63,20 @@ public class User {
 		this.password = password;
 	}
 
-	/*
-	 * public Collection<Note> getNotes() { return notes; }
-	 * 
-	 * public void setNotes(Collection<Note> notes) { this.notes = notes; }
-	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public String getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
 	
 }

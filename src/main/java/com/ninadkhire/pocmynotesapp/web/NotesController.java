@@ -33,6 +33,16 @@ public class NotesController {
 		return "Access granted!";
 	}
 	
+	@GetMapping("/")
+	public String getHomePage(){
+		return "Home Page";
+	}
+	
+	@GetMapping("/notes/user")
+	public List<Note> getUserNotes(@PathVariable String email){
+		return noteRepository.findByUserEmail(email);
+	}
+	
 	@GetMapping("/notes")
 	public List<Note> getAllNotes(){
 		return noteRepository.findAll();

@@ -8,6 +8,6 @@ import com.ninadkhire.pocmynotesapp.model.Note;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
-	List<Note> findNotesByUserEmail(String email);
+	List<Note> findByUserEmail(String email);
 	
 }
