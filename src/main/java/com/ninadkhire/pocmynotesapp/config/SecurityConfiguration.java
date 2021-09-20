@@ -46,9 +46,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		 */
 		
 		
-		  http.authorizeRequests()
-		  .antMatchers("/login").permitAll() .and().formLogin();
+		/*
+		 * http.authorizeRequests() .antMatchers("/login").permitAll()
+		 * .and().formLogin();
+		 */
 		 
+		
+		/*
+		 * http.csrf().disable() .authorizeRequests() .antMatchers("/login").permitAll()
+		 * .anyRequest() .authenticated() .and() .httpBasic() .and() .formLogin();
+		 */
+		
+		http.
+			authorizeRequests()
+			.antMatchers("**").permitAll();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 }
