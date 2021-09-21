@@ -37,6 +37,13 @@ public class User {
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+	
+	//Added by Ninad
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable( name = "user_notes",
+				joinColumns = @JoinColumn(name = "user_id"),
+				inverseJoinColumns = @JoinColumn(name = "note_id"))
+	private Set<Note> notes = new HashSet<>();
 
 	public User() {
 	}
@@ -86,4 +93,15 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
+	//Added by Ninad
+	public Set<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(Set<Note> notes) {
+		this.notes = notes;
+	}
+	
+	
 }
