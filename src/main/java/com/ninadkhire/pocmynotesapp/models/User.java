@@ -1,6 +1,8 @@
 package com.ninadkhire.pocmynotesapp.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -8,12 +10,18 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "users",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = "username"),
 				@UniqueConstraint(columnNames = "email")
 		})
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +46,8 @@ public class User {
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 	
-	//Added by Ninad
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable( name = "user_notes",
-				joinColumns = @JoinColumn(name = "user_id"),
-				inverseJoinColumns = @JoinColumn(name = "note_id"))
-	private Set<Note> notes = new HashSet<>();
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
+	private List<Note> notes;
 
 	public User() {
 	}
@@ -94,13 +98,22 @@ public class User {
 		this.roles = roles;
 	}
 
-	//Added by Ninad
-	public Set<Note> getNotes() {
+	public List<Note> getNotes() {
 		return notes;
 	}
 
-	public void setNotes(Set<Note> notes) {
+	public void setNotes(List<Note> notes) {
 		this.notes = notes;
+	}
+	
+	public void addNote(Note note) {
+		if(notes==null) {
+			notes = new ArrayList<>();
+		}
+		
+		notes.add(note);
+		
+		note.setUser(this);
 	}
 	
 	
