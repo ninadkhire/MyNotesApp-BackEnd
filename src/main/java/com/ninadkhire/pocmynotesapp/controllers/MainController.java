@@ -21,6 +21,7 @@ import com.ninadkhire.pocmynotesapp.models.Note;
 import com.ninadkhire.pocmynotesapp.models.User;
 import com.ninadkhire.pocmynotesapp.payload.request.NoteRequest;
 import com.ninadkhire.pocmynotesapp.payload.response.MessageResponse;
+import com.ninadkhire.pocmynotesapp.repository.NoteRepository;
 import com.ninadkhire.pocmynotesapp.repository.UserRepository;
 import com.ninadkhire.pocmynotesapp.security.services.UserDetailsImpl;
 
@@ -31,6 +32,9 @@ public class MainController {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	NoteRepository noteRepository;
 	
 	public Object getCurrentUser() {
 		return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -80,10 +84,10 @@ public class MainController {
 		}
 		
 		//retrieve the note to be updated
-		ArrayList<Note> notes = (ArrayList<Note>)user.getNotes();
+		//ArrayList<Note> notes = (ArrayList<Note>)user.getNotes();
 		
 		//update the note
-		notes.forEach((note)->{
+		user.getNotes().forEach((note)->{
 			if(note.getId().equals(updatedNote.getId())) {
 				note.setTitle(updatedNote.getTitle());
 				note.setNote(updatedNote.getNote());
@@ -114,19 +118,29 @@ public class MainController {
 		}
 		
 		//retrieve the note to be updated
-		ArrayList<Note> notes = (ArrayList<Note>)user.getNotes();
+		Note noteToBeDeleted = null;
+		List<Note> updatedNotes = new ArrayList<Note>();
 		
 		//Delete the required note
-		notes.forEach((note)->{
+		for(Note note: user.getNotes()) {
 			if(note.getId().equals(noteIdToBeDeleted)) {
-				notes.remove(note);
+				noteToBeDeleted = note;
+			} else {
+				updatedNotes.add(note);
 			}
-		});
+		}
+		
+		//boolean result = user.getNotes().remove(noteToBeDeleted);
+		
+		//List<Note> updatedNotes = new ArrayList<Note>(user.getNotes());
+		user.setNotes(updatedNotes);
 		
 		//save the user object
 		userRepository.save(user);
 		
-		return ResponseEntity.ok(new MessageResponse("Deleted"));
+		noteRepository.deleteById(noteIdToBeDeleted);
+		
+		return ResponseEntity.ok(new MessageResponse("Deleted: "+ noteToBeDeleted.getId()));
 	}
 	
 	@GetMapping("/notes")
